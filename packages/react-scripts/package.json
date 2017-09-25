@@ -1,14 +1,14 @@
 {
-  "name": "react-scripts",
+  "name": "@ontruck/react-scripts",
   "version": "1.0.13",
   "description": "Configuration and scripts for Create React App.",
-  "repository": "facebookincubator/create-react-app",
+  "repository": "ontruck/create-react-app",
   "license": "BSD-3-Clause",
   "engines": {
     "node": ">=6"
   },
   "bugs": {
-    "url": "https://github.com/facebookincubator/create-react-app/issues"
+    "url": "https://github.com/ontruck/create-react-app/issues"
   },
   "files": [
     "bin",
@@ -44,11 +44,14 @@
     "fs-extra": "3.0.1",
     "html-webpack-plugin": "2.29.0",
     "jest": "20.0.4",
+    "jest-junit": "^3.0.0",
+    "node-sass": "^4.5.3",
     "object-assign": "4.1.1",
     "postcss-flexbugs-fixes": "3.2.0",
     "postcss-loader": "2.0.6",
     "promise": "8.0.1",
     "react-dev-utils": "^4.0.1",
+    "sass-loader": "^6.0.6",
     "style-loader": "0.18.2",
     "sw-precache-webpack-plugin": "0.11.4",
     "url-loader": "0.5.9",
