@@ -205,8 +205,7 @@ module.exports = {
                     {
                       loader: require.resolve('sass-loader'),
                     },
-                    { ...customizers.postCSSLoader },
-                  ],
+                  ].concat([customizers.postCSSLoader]),
                 },
                 extractTextPluginOptions
               )
@@ -231,8 +230,7 @@ module.exports = {
                     {
                       loader: require.resolve('sass-loader'),
                     },
-                    { ...customizers.postCSSLoader },
-                  ],
+                  ].concat([customizers.postCSSLoader]),
                 },
                 extractTextPluginOptions
               )
@@ -270,8 +268,7 @@ module.exports = {
                         sourceMap: shouldUseSourceMap,
                       },
                     },
-                    { ...customizers.postCSSLoader },
-                  ],
+                  ].concat([customizers.postCSSLoader]),
                 },
                 extractTextPluginOptions
               )
