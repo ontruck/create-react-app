@@ -176,7 +176,10 @@ module.exports = {
             options: {
               // @remove-on-eject-begin
               babelrc: false,
-              presets: [require.resolve('babel-preset-react-app')],
+              presets: [
+                require.resolve('babel-preset-react-app'),
+                require.resolve('babel-preset-react-hmre'),
+              ],
               // @remove-on-eject-end
               // This is a feature of `babel-loader` for webpack (not Babel itself).
               // It enables caching results in ./node_modules/.cache/babel-loader/
@@ -202,8 +205,7 @@ module.exports = {
               {
                 loader: require.resolve('sass-loader'),
               },
-              { ...customizers.postCSSLoader },
-            ],
+            ].concat([customizers.postCSSLoader]),
           },
           {
             test: /((?!\.preserve).{9}|^.{0,9})\.scss$/,
@@ -222,8 +224,7 @@ module.exports = {
               {
                 loader: require.resolve('sass-loader'),
               },
-              { ...customizers.postCSSLoader },
-            ],
+            ].concat([customizers.postCSSLoader]),
           },
           // "postcss" loader applies autoprefixer to our CSS.
           // "css" loader resolves paths in CSS and adds assets as dependencies.
@@ -240,8 +241,7 @@ module.exports = {
                   importLoaders: 1,
                 },
               },
-              { ...customizers.postCSSLoader },
-            ],
+            ].concat([customizers.postCSSLoader]),
           },
           // "file" loader makes sure those assets get served by WebpackDevServer.
           // When you `import` an asset, you get its (virtual) filename.
