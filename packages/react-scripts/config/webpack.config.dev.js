@@ -23,6 +23,7 @@ const utils = require('./ontruck-react-scripts/utils');
 
 const modules = utils.moduleResolver(process.env.RESOLVE_MODULES);
 const babelModules = utils.moduleResolver(process.env.PROCESS_BABEL);
+const cssModules = utils.moduleResolver(process.env.CSS_MODULES);
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
@@ -183,28 +184,9 @@ module.exports = {
               cacheDirectory: true,
             },
           },
-          // Custom loaders
-          // sass-loader
           {
-            test: /\.preserve\.scss$/,
-            use: [
-              require.resolve('style-loader'),
-              {
-                loader: require.resolve('css-loader'),
-                options: {
-                  importLoaders: 1,
-                  modules: true,
-                  sourceMap: true,
-                  localIdentName: '[local]',
-                },
-              },
-              {
-                loader: require.resolve('sass-loader'),
-              },
-            ].concat([customizers.postCSSLoader]),
-          },
-          {
-            test: /((?!\.preserve).{9}|^.{0,9})\.scss$/,
+            test: /\.s?css$/,
+            include: [paths.appSrc, ...modules, ...cssModules],
             use: [
               require.resolve('style-loader'),
               {
