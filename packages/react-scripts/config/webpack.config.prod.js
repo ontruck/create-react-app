@@ -24,6 +24,7 @@ const utils = require('./ontruck-react-scripts/utils');
 
 const modules = utils.moduleResolver(process.env.RESOLVE_MODULES);
 const babelModules = utils.moduleResolver(process.env.PROCESS_BABEL);
+const cssModules = utils.moduleResolver(process.env.CSS_MODULES);
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // It requires a trailing slash, or the file assets will get an incorrect path.
@@ -185,34 +186,9 @@ module.exports = {
             },
           },
           // Custom loaders
-          // sass-loader
           {
-            test: /\.preserve\.scss$/,
-            loader: ExtractTextPlugin.extract(
-              Object.assign(
-                {
-                  fallback: require.resolve('style-loader'),
-                  use: [
-                    {
-                      loader: require.resolve('css-loader'),
-                      options: {
-                        importLoaders: 1,
-                        modules: true,
-                        localIdentName: '[local]',
-                        sourceMap: shouldUseSourceMap,
-                      },
-                    },
-                    {
-                      loader: require.resolve('sass-loader'),
-                    },
-                  ].concat([customizers.postCSSLoader]),
-                },
-                extractTextPluginOptions
-              )
-            ),
-          },
-          {
-            test: /((?!\.preserve).{9}|^.{0,9})\.scss$/,
+            test: /\.s?css$/,
+            include: [paths.appSrc, ...modules, ...cssModules],
             loader: ExtractTextPlugin.extract(
               Object.assign(
                 {
