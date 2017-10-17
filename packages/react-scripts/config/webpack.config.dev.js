@@ -24,6 +24,7 @@ const utils = require('./ontruck-react-scripts/utils');
 const modules = utils.moduleResolver(process.env.RESOLVE_MODULES);
 const babelModules = utils.moduleResolver(process.env.PROCESS_BABEL);
 const cssModules = utils.moduleResolver(process.env.CSS_MODULES);
+const locales = utils.moduleResolver(process.env.LOCALES_FOLDER);
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
@@ -185,6 +186,19 @@ module.exports = {
               // directory for faster rebuilds.
               cacheDirectory: true,
             },
+          },
+          // Custom loaders
+          {
+            test: /\.json$/,
+            include: [...locales],
+            use: [
+              {
+                loader: require.resolve('json-loader'),
+              },
+              {
+                loader: require.resolve('./ontruck-react-scripts/loaders/intl-loader'),
+              }
+            ]
           },
           {
             test: /\.s?css$/,

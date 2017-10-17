@@ -25,6 +25,7 @@ const utils = require('./ontruck-react-scripts/utils');
 const modules = utils.moduleResolver(process.env.RESOLVE_MODULES);
 const babelModules = utils.moduleResolver(process.env.PROCESS_BABEL);
 const cssModules = utils.moduleResolver(process.env.CSS_MODULES);
+const locales = utils.moduleResolver(process.env.LOCALES_FOLDER);
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // It requires a trailing slash, or the file assets will get an incorrect path.
@@ -186,6 +187,18 @@ module.exports = {
             },
           },
           // Custom loaders
+          {
+            test: /\.json$/,
+            include: [...locales],
+            use: [
+              {
+                loader: require.resolve('json-loader'),
+              },
+              {
+                loader: require.resolve('./ontruck-react-scripts/loaders/intl-loader'),
+              }
+            ]
+          },
           {
             test: /\.s?css$/,
             include: [paths.appSrc, ...modules, ...cssModules],
