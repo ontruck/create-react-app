@@ -393,9 +393,11 @@ module.exports = {
       apiKey: process.env.SENTRY_API_KEY,
       deleteAfterCompile: true,
       // Release version name/hash is required
-      release: function(hash) {
-        return hash;
-      },
+      release:
+        process.env.SENTRY_RELEASE ||
+        function(hash) {
+          return hash;
+        },
     }),
   ],
   // Some libraries import Node modules but don't use them in the browser.
