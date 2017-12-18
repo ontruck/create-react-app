@@ -391,6 +391,7 @@ module.exports = {
       organization: process.env.SENTRY_ORGANIZATION,
       project: process.env.SENTRY_PROJECT,
       apiKey: process.env.SENTRY_API_KEY,
+      deleteAfterCompile: true,
       // Release version name/hash is required
       release: function(hash) {
         return hash;
