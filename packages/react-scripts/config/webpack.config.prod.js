@@ -392,6 +392,7 @@ module.exports = {
       project: process.env.SENTRY_PROJECT,
       apiKey: process.env.SENTRY_API_KEY,
       deleteAfterCompile: true,
+      suppressErrors: true,
       // Release version name/hash is required
       release:
         process.env.SENTRY_RELEASE ||
