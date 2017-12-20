@@ -61,6 +61,19 @@ const extractTextPluginOptions = shouldUseRelativeAssetPaths
     { publicPath: Array(cssFilename.split('/').length).join('../') }
   : {};
 
+const sentryPlugin = process.env.SENTRY_PROJECT
+  ? [
+      new SentryPlugin({
+        baseSentryURL: process.env.SENTRY_BASE_URL,
+        organization: process.env.SENTRY_ORGANIZATION,
+        project: process.env.SENTRY_PROJECT,
+        apiKey: process.env.SENTRY_API_KEY,
+        suppressErrors: true,
+        release: process.env.SENTRY_RELEASE,
+      }),
+    ]
+  : [];
+
 // This is the production configuration.
 // It compiles slowly and is focused on producing a fast and minimal bundle.
 // The development configuration is different and lives in a separate file.
@@ -385,24 +398,7 @@ module.exports = {
     // https://github.com/jmblog/how-to-optimize-momentjs-with-webpack
     // You can remove this if you don't use Moment.js:
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
-    new SentryPlugin({
-      // Sentry options are required
-      baseSentryURL: process.env.SENTRY_BASE_URL,
-      organization: process.env.SENTRY_ORGANIZATION,
-      project: process.env.SENTRY_PROJECT,
-      apiKey: process.env.SENTRY_API_KEY,
-      deleteAfterCompile: true,
-      suppressErrors: true,
-      // Release version name/hash is required
-      release:
-        process.env.SENTRY_RELEASE ||
-        function(hash) {
-          return hash;
-        },
-      filenameTransform: function(filename) {
-        return process.env.SENTRY_ARTIFACT_BASE_URL + filename;
-      },
-    }),
+    ...sentryPlugin,
   ],
   // Some libraries import Node modules but don't use them in the browser.
   // Tell Webpack to provide empty mocks for them so importing them works.
