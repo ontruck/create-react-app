@@ -401,7 +401,7 @@ module.exports = {
         },
       filenameTransform: function(filename) {
         const fileNameParts = filename.split('/');
-        return filename[fileNameParts.length - 1];
+        return fileNameParts[fileNameParts.length - 1];
       },
     }),
   ],
