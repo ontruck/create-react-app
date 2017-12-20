@@ -399,9 +399,6 @@ module.exports = {
         function(hash) {
           return hash;
         },
-      filenameTransform: function(filename) {
-        return filename;
-      },
     }),
   ],
   // Some libraries import Node modules but don't use them in the browser.
