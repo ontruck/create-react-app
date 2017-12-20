@@ -400,7 +400,7 @@ module.exports = {
           return hash;
         },
       filenameTransform: function(filename) {
-        return filename;
+        return process.env.SENTRY_ARTIFACT_BASE_URL + filename;
       },
     }),
   ],
