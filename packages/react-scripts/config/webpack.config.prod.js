@@ -400,8 +400,7 @@ module.exports = {
           return hash;
         },
       filenameTransform: function(filename) {
-        const fileNameParts = filename.split('/');
-        return fileNameParts[fileNameParts.length - 1];
+        return filename;
       },
     }),
   ],
