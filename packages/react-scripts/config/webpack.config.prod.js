@@ -399,6 +399,10 @@ module.exports = {
         function(hash) {
           return hash;
         },
+      filenameTransform: function(filename) {
+        const fileNameParts = filename.split('/');
+        return filename[fileNameParts.length - 1];
+      },
     }),
   ],
   // Some libraries import Node modules but don't use them in the browser.
