@@ -20,6 +20,7 @@ const getClientEnvironment = require('./env');
 const paths = require('./paths');
 const customizers = require('./ontruck-react-scripts/customizers');
 const utils = require('./ontruck-react-scripts/utils');
+const StylablePlugin = require('stylable-integration/webpack-plugin');
 
 const modules = utils.moduleResolver(process.env.RESOLVE_MODULES);
 const babelModules = utils.moduleResolver(process.env.PROCESS_BABEL);
@@ -155,6 +156,7 @@ module.exports = {
         // match the requirements. When no loader matches it will fall
         // back to the "file" loader at the end of the loader list.
         oneOf: [
+          StylablePlugin.rule(),
           // "url" loader works like "file" loader except that it embeds assets
           // smaller than specified limit in bytes as data URLs to avoid requests.
           // A missing `test` is equivalent to a match.
@@ -291,6 +293,7 @@ module.exports = {
     // https://github.com/jmblog/how-to-optimize-momentjs-with-webpack
     // You can remove this if you don't use Moment.js:
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+    new StylablePlugin({ injectBundleCss: true  /* dev mode */ }),
   ],
   // Some libraries import Node modules but don't use them in the browser.
   // Tell Webpack to provide empty mocks for them so importing them works.
