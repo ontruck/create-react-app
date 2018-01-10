@@ -22,11 +22,14 @@ const paths = require('./paths');
 const getClientEnvironment = require('./env');
 const customizers = require('./ontruck-react-scripts/customizers');
 const utils = require('./ontruck-react-scripts/utils');
+const StylablePlugin = require('stylable-integration/webpack-plugin');
 
 const modules = utils.moduleResolver(process.env.RESOLVE_MODULES);
 const babelModules = utils.moduleResolver(process.env.PROCESS_BABEL);
 const cssModules = utils.moduleResolver(process.env.CSS_MODULES);
 const locales = utils.moduleResolver(process.env.LOCALES_FOLDER);
+const icons = utils.moduleResolver(process.env.ICONS_FOLDER);
+const iconComp = utils.addAppPath(process.env.ICON_COMP);
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // It requires a trailing slash, or the file assets will get an incorrect path.
@@ -215,6 +218,7 @@ module.exports = {
               },
             ],
           },
+          StylablePlugin.rule(),
           {
             test: /\.s?css$/,
             include: [paths.appSrc, ...modules, ...cssModules],
@@ -297,6 +301,22 @@ module.exports = {
           },
           // ** STOP ** Are you adding a new loader?
           // Make sure to add the new loader(s) before the "file" loader.
+        ],
+      },
+      // svg-sprite-loader should be after babel-loader 
+      {
+        test: /\.svg$/,
+        include: [...icons],
+        use: [
+          {
+            loader: 'svg-sprite-loader',
+            options: {
+              runtimeGenerator: customizers.svgRuntimeGenerator,
+              runtimeOptions: {
+                iconModule: iconComp 
+              }
+            }
+          }
         ],
       },
     ],
@@ -399,6 +419,7 @@ module.exports = {
     // You can remove this if you don't use Moment.js:
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
     ...sentryPlugin,
+    new StylablePlugin({ injectBundleCss: true  /* dev mode */ }),
   ],
   // Some libraries import Node modules but don't use them in the browser.
   // Tell Webpack to provide empty mocks for them so importing them works.
