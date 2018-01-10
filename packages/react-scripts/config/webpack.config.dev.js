@@ -26,7 +26,8 @@ const modules = utils.moduleResolver(process.env.RESOLVE_MODULES);
 const babelModules = utils.moduleResolver(process.env.PROCESS_BABEL);
 const cssModules = utils.moduleResolver(process.env.CSS_MODULES);
 const locales = utils.moduleResolver(process.env.LOCALES_FOLDER);
-
+const icons = utils.moduleResolver(process.env.ICONS_FOLDER);
+const iconComp = utils.addAppPath(process.env.ICON_COMP);
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
 const publicPath = '/';
@@ -156,7 +157,6 @@ module.exports = {
         // match the requirements. When no loader matches it will fall
         // back to the "file" loader at the end of the loader list.
         oneOf: [
-          StylablePlugin.rule(),
           // "url" loader works like "file" loader except that it embeds assets
           // smaller than specified limit in bytes as data URLs to avoid requests.
           // A missing `test` is equivalent to a match.
@@ -170,7 +170,7 @@ module.exports = {
           },
           // Process JS with Babel.
           {
-            test: /\.(js|jsx|mjs)$/,
+            test: new RegExp(`(\.(js|jsx|mjs)|(${icons}.*\.svg))$`),
             include: [paths.appSrc, ...modules, ...babelModules],
             loader: require.resolve('babel-loader'),
             options: {
@@ -180,6 +180,7 @@ module.exports = {
                 require.resolve('babel-preset-react-app'),
                 require.resolve('babel-preset-react-hmre'),
               ],
+              //,
               // @remove-on-eject-end
               // This is a feature of `babel-loader` for webpack (not Babel itself).
               // It enables caching results in ./node_modules/.cache/babel-loader/
@@ -202,6 +203,7 @@ module.exports = {
               },
             ],
           },
+          StylablePlugin.rule(),
           {
             test: /\.s?css$/,
             include: [paths.appSrc, ...modules, ...cssModules],
@@ -255,6 +257,22 @@ module.exports = {
               name: 'static/media/[name].[hash:8].[ext]',
             },
           },
+        ],
+      },
+      // svg-sprite-loader should be after babel-loader
+      {
+        test: /\.svg$/,
+        include: [...icons],
+        use: [
+          {
+            loader: 'svg-sprite-loader',
+            options: {
+              runtimeGenerator: customizers.svgRuntimeGenerator,
+              runtimeOptions: {
+                iconModule: iconComp
+              }
+            }
+          }
         ],
       },
       // ** STOP ** Are you adding a new loader?
