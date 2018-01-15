@@ -20,14 +20,12 @@ const getClientEnvironment = require('./env');
 const paths = require('./paths');
 const customizers = require('./ontruck-react-scripts/customizers');
 const utils = require('./ontruck-react-scripts/utils');
-const StylablePlugin = require('stylable-integration/webpack-plugin');
 
 const modules = utils.moduleResolver(process.env.RESOLVE_MODULES);
 const babelModules = utils.moduleResolver(process.env.PROCESS_BABEL);
 const cssModules = utils.moduleResolver(process.env.CSS_MODULES);
 const locales = utils.moduleResolver(process.env.LOCALES_FOLDER);
 const icons = utils.moduleResolver(process.env.ICONS_FOLDER);
-const iconComp = utils.addAppPath(process.env.ICON_COMP);
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
 const publicPath = '/';
@@ -170,7 +168,7 @@ module.exports = {
           },
           // Process JS with Babel.
           {
-            test: new RegExp(`(\.(js|jsx|mjs)|(${icons}.*\.svg))$`),
+            test: /\.(js|jsx|mjs)$/,
             include: [paths.appSrc, ...modules, ...babelModules],
             loader: require.resolve('babel-loader'),
             options: {
@@ -203,7 +201,6 @@ module.exports = {
               },
             ],
           },
-          StylablePlugin.rule(),
           {
             test: /\.s?css$/,
             include: [paths.appSrc, ...modules, ...cssModules],
@@ -241,6 +238,15 @@ module.exports = {
               },
             ].concat([customizers.postCSSLoader]),
           },
+          {
+            test: /\.svg$/,
+            include: [...icons],
+            use: [
+              {
+                loader: 'svg-sprite-loader',
+              }
+            ],
+          },
           // "file" loader makes sure those assets get served by WebpackDevServer.
           // When you `import` an asset, you get its (virtual) filename.
           // In production, they would get copied to the `build` folder.
@@ -257,22 +263,6 @@ module.exports = {
               name: 'static/media/[name].[hash:8].[ext]',
             },
           },
-        ],
-      },
-      // svg-sprite-loader should be after babel-loader
-      {
-        test: /\.svg$/,
-        include: [...icons],
-        use: [
-          {
-            loader: 'svg-sprite-loader',
-            options: {
-              runtimeGenerator: customizers.svgRuntimeGenerator,
-              runtimeOptions: {
-                iconModule: iconComp
-              }
-            }
-          }
         ],
       },
       // ** STOP ** Are you adding a new loader?
@@ -313,7 +303,6 @@ module.exports = {
     // https://github.com/jmblog/how-to-optimize-momentjs-with-webpack
     // You can remove this if you don't use Moment.js:
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
-    new StylablePlugin({ injectBundleCss: true  /* dev mode */ }),
   ],
   // Some libraries import Node modules but don't use them in the browser.
   // Tell Webpack to provide empty mocks for them so importing them works.
