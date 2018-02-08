@@ -26,6 +26,7 @@ const babelModules = utils.moduleResolver(process.env.PROCESS_BABEL);
 const cssModules = utils.moduleResolver(process.env.CSS_MODULES);
 const locales = utils.moduleResolver(process.env.LOCALES_FOLDER);
 const svgIcons = utils.moduleResolver(process.env.SVG_ICONS_FOLDER);
+
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
 const publicPath = '/';
