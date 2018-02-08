@@ -25,7 +25,7 @@ const modules = utils.moduleResolver(process.env.RESOLVE_MODULES);
 const babelModules = utils.moduleResolver(process.env.PROCESS_BABEL);
 const cssModules = utils.moduleResolver(process.env.CSS_MODULES);
 const locales = utils.moduleResolver(process.env.LOCALES_FOLDER);
-const icons = utils.moduleResolver(process.env.ICONS_FOLDER);
+const svgIcons = utils.moduleResolver(process.env.SVG_ICONS_FOLDER);
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
 const publicPath = '/';
@@ -195,9 +195,11 @@ module.exports = {
                 loader: require.resolve('json-loader'),
               },
               {
-                loader: require.resolve('./ontruck-react-scripts/loaders/intl-loader'),
-              }
-            ]
+                loader: require.resolve(
+                  './ontruck-react-scripts/loaders/intl-loader'
+                ),
+              },
+            ],
           },
           {
             test: /\.s?css$/,
@@ -238,12 +240,11 @@ module.exports = {
           },
           {
             test: /\.svg$/,
-            include: [...icons],
-            use: [
-              {
-                loader: 'svg-sprite-loader',
-              }
-            ],
+            include: [...svgIcons],
+            loader: require.resolve('inline-loader'),
+            options: {
+              parentId: `${process.env.SVG_ICONS_PARENT_ID}`,
+            },
           },
           // "file" loader makes sure those assets get served by WebpackDevServer.
           // When you `import` an asset, you get its (virtual) filename.

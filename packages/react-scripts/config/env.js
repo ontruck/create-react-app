@@ -86,6 +86,7 @@ function getClientEnvironment(publicUrl) {
         // images into the `src` and `import` them in code to get their paths.
         PUBLIC_URL: publicUrl,
         SENTRY_RELEASE: process.env.SENTRY_RELEASE || 'norelease',
+        SVG_ICONS_PARENT_ID: process.env.SVG_ICONS_PARENT_ID || 'svg-root',
       }
     );
   // Stringify all values so we can feed into Webpack DefinePlugin
