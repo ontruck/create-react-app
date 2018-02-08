@@ -25,7 +25,8 @@ const modules = utils.moduleResolver(process.env.RESOLVE_MODULES);
 const babelModules = utils.moduleResolver(process.env.PROCESS_BABEL);
 const cssModules = utils.moduleResolver(process.env.CSS_MODULES);
 const locales = utils.moduleResolver(process.env.LOCALES_FOLDER);
-const icons = utils.moduleResolver(process.env.ICONS_FOLDER);
+const svgIcons = utils.moduleResolver(process.env.SVG_ICONS_FOLDER);
+
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
 const publicPath = '/';
@@ -168,7 +169,7 @@ module.exports = {
           },
           // Process JS with Babel.
           {
-            test: /\.(js|jsx|mjs)$/,
+            test: /\.(js|jsx)$/,
             include: [paths.appSrc, ...modules, ...babelModules],
             loader: require.resolve('babel-loader'),
             options: {
@@ -240,12 +241,11 @@ module.exports = {
           },
           {
             test: /\.svg$/,
-            include: [...icons],
-            use: [
-              {
-                loader: 'svg-sprite-loader',
-              }
-            ],
+            include: [...svgIcons],
+            loader: require.resolve('inline-loader'),
+            options: {
+              parentId: `${process.env.SVG_ICONS_PARENT_ID}`,
+            },
           },
           // "file" loader makes sure those assets get served by WebpackDevServer.
           // When you `import` an asset, you get its (virtual) filename.
@@ -254,10 +254,10 @@ module.exports = {
           // that fall through the other loaders.
           {
             // Exclude `js` files to keep "css" loader working as it injects
-            // it's runtime that would otherwise processed through "file" loader.
+            // its runtime that would otherwise processed through "file" loader.
             // Also exclude `html` and `json` extensions so they get processed
             // by webpacks internal loaders.
-            exclude: [/\.js$/, /\.html$/, /\.json$/],
+            exclude: [/\.(js|jsx|mjs)$/, /\.html$/, /\.json$/],
             loader: require.resolve('file-loader'),
             options: {
               name: 'static/media/[name].[hash:8].[ext]',

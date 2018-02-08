@@ -27,7 +27,7 @@ const modules = utils.moduleResolver(process.env.RESOLVE_MODULES);
 const babelModules = utils.moduleResolver(process.env.PROCESS_BABEL);
 const cssModules = utils.moduleResolver(process.env.CSS_MODULES);
 const locales = utils.moduleResolver(process.env.LOCALES_FOLDER);
-const icons = utils.moduleResolver(process.env.ICONS_FOLDER);
+const svgIcons = utils.moduleResolver(process.env.SVG_ICONS_FOLDER);
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // It requires a trailing slash, or the file assets will get an incorrect path.
@@ -190,7 +190,7 @@ module.exports = {
           },
           // Process JS with Babel.
           {
-            test: /\.(js|jsx|mjs)$/,
+            test: /\.(js|jsx)$/,
             include: [paths.appSrc, ...modules, ...babelModules],
             loader: require.resolve('babel-loader'),
             options: {
@@ -283,12 +283,11 @@ module.exports = {
           },
           {
             test: /\.svg$/,
-            include: [...icons],
-            use: [
-              {
-                loader: 'svg-sprite-loader',
-              }
-            ],
+            include: [...svgIcons],
+            loader: require.resolve('inline-loader'),
+            options: {
+              parentId: `${process.env.SVG_ICONS_PARENT_ID}`,
+            },
           },
           // "file" loader makes sure assets end up in the `build` folder.
           // When you `import` an asset, you get its filename.
@@ -300,7 +299,7 @@ module.exports = {
             // it's runtime that would otherwise processed through "file" loader.
             // Also exclude `html` and `json` extensions so they get processed
             // by webpacks internal loaders.
-            exclude: [/\.js$/, /\.html$/, /\.json$/],
+            exclude: [/\.(js|jsx|mjs)$/, /\.html$/, /\.json$/],
             options: {
               name: 'static/media/[name].[hash:8].[ext]',
             },
